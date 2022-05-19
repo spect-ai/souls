@@ -5,16 +5,16 @@ library DataTypes {
     struct Bounty {
         address claimNFT;
         address claimModule;
-        address issueNFT;
-        address issueModule;
+        address reviewNFT;
+        address reviewModule;
         string contentUri;
     }
 
     struct CreateBountyData {
         address claimModule;
         bytes claimModuleInitData;
-        address issueModule;
-        bytes issueModuleInitData;
+        address reviewModule;
+        bytes reviewModuleInitData;
         string contentUri;
     }
 }

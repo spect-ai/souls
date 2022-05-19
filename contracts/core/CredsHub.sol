@@ -8,6 +8,8 @@ import {PublishingLogic} from "../libraries/PublishingLogic.sol";
 import {ICredsHub} from "../interfaces/ICredsHub.sol";
 
 contract CredsHub is CredsStorage, ICredsHub {
+    constructor() {}
+
     function createBounty(DataTypes.CreateBountyData calldata vars)
         public
         returns (uint256)
@@ -19,11 +21,24 @@ contract CredsHub is CredsStorage, ICredsHub {
         }
     }
 
+    function claimBounty(uint256 bountyId) public returns (uint256) {
+        unchecked {
+            PublishingLogic.claim(
+                bountyId,
+                msg.sender,
+                address(this),
+                _bountyIdToBounty
+            );
+            return bountyId;
+        }
+    }
+
     function getContentURI(uint256 bountyId)
         public
         view
+        override
         returns (string memory)
     {
-        return _bountyIdToBounty[bountyId].contentURI;
+        return _bountyIdToBounty[bountyId].contentUri;
     }
 }

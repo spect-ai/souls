@@ -6,7 +6,11 @@ interface IClaimModule {
         external
         returns (bytes memory);
 
-    function processClaim(uint256 bountyId, bytes calldata data) external;
+    function processClaim(
+        uint256 bountyId,
+        address claimee,
+        bytes calldata data
+    ) external;
 
     function processSubmit(uint256 bountyId, bytes calldata data) external;
 }
