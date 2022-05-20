@@ -14,9 +14,15 @@ contract CredsHub is CredsStorage, ICredsHub {
         public
         returns (uint256)
     {
+        console.log("creating bounty", vars.contentUri);
         unchecked {
             uint256 bountyId = ++bountyCounter;
-            PublishingLogic.createBounty(vars, bountyId, _bountyIdToBounty);
+            PublishingLogic.createBounty(
+                msg.sender,
+                vars,
+                bountyId,
+                _bountyIdToBounty
+            );
             return bountyId;
         }
     }
@@ -33,6 +39,14 @@ contract CredsHub is CredsStorage, ICredsHub {
         }
     }
 
+    /* VIEW FUNCTIONS */
+
+    function getNumBounties() public view returns (uint256) {
+        console.log("bountyCounter", bountyCounter);
+
+        return bountyCounter;
+    }
+
     function getContentURI(uint256 bountyId)
         public
         view
@@ -40,5 +54,49 @@ contract CredsHub is CredsStorage, ICredsHub {
         returns (string memory)
     {
         return _bountyIdToBounty[bountyId].contentUri;
+    }
+
+    function getClaimModule(uint256 bountyId)
+        public
+        view
+        override
+        returns (address)
+    {
+        return _bountyIdToBounty[bountyId].claimModule;
+    }
+
+    function getClaimNFT(uint256 bountyId)
+        public
+        view
+        override
+        returns (address)
+    {
+        return _bountyIdToBounty[bountyId].claimNFT;
+    }
+
+    function getReviewModule(uint256 bountyId)
+        public
+        view
+        override
+        returns (address)
+    {
+        return _bountyIdToBounty[bountyId].reviewModule;
+    }
+
+    function getReviewNFT(uint256 bountyId)
+        public
+        view
+        override
+        returns (address)
+    {
+        return _bountyIdToBounty[bountyId].reviewNFT;
+    }
+
+    function getBounty(uint256 bountyId)
+        public
+        view
+        returns (DataTypes.Bounty memory)
+    {
+        return _bountyIdToBounty[bountyId];
     }
 }

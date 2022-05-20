@@ -6,4 +6,12 @@ interface ICredsHub {
         external
         view
         returns (string memory);
+
+    function getClaimModule(uint256 bountyId) external view returns (address);
+
+    function getClaimNFT(uint256 bountyId) external view returns (address);
+
+    function getReviewModule(uint256 bountyId) external view returns (address);
+
+    function getReviewNFT(uint256 bountyId) external view returns (address);
 }

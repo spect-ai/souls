@@ -9,6 +9,14 @@ abstract contract ReviewModule is IReviewModule {
         return new bytes(0);
     }
 
+    function processReview(uint256 bountyId, bytes calldata data)
+        external
+        override
+        returns (bytes memory)
+    {
+        return new bytes(0);
+    }
+
     function processFulfill(uint256 bountyId, bytes calldata data)
         external
         override

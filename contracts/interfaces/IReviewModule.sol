@@ -6,6 +6,10 @@ interface IReviewModule {
         external
         returns (bytes memory);
 
+    function processReview(uint256 bountyId, bytes calldata data)
+        external
+        returns (bytes memory);
+
     function processFulfill(uint256 bountyId, bytes calldata data)
         external
         returns (bytes memory);

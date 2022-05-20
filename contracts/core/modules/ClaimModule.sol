@@ -26,5 +26,13 @@ contract ClaimModule {
             revert AddressNotWhitelisted();
     }
 
+    function isWhitelistedAddress(uint256 bountyId, address person)
+        public
+        view
+        returns (bool)
+    {
+        return whitelist[bountyId][person];
+    }
+
     function processSubmit(uint256 bountyId, bytes calldata data) external {}
 }

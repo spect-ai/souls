@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {DataTypes} from "./DataTypes.sol";
+import {Events} from "./Events.sol";
 import {IReviewModule} from "../interfaces/IReviewModule.sol";
 import {IClaimModule} from "../interfaces/IClaimModule.sol";
 import {IClaimNFT} from "../interfaces/IClaimNFT.sol";
@@ -9,6 +10,7 @@ import {ClaimNFT} from "../core/ClaimNFT.sol";
 
 library PublishingLogic {
     function createBounty(
+        address issuer,
         DataTypes.CreateBountyData calldata vars,
         uint256 bountyId,
         mapping(uint256 => DataTypes.Bounty) storage _bountyIdToBounty
@@ -16,17 +18,30 @@ library PublishingLogic {
         _validateBountyData(vars);
         _bountyIdToBounty[bountyId].contentUri = vars.contentUri;
 
-        bytes memory claimModuleReturnData = _initBountyClaimModule(
+        if (vars.claimModule != address(0)) {
+            bytes memory claimModuleReturnData = _initBountyClaimModule(
+                vars.claimModule,
+                vars.claimModuleInitData,
+                bountyId,
+                _bountyIdToBounty
+            );
+        }
+        if (vars.reviewModule != address(0)) {
+            bytes memory issueModuleReturnData = _initBountyReviewModule(
+                vars.reviewModule,
+                vars.reviewModuleInitData,
+                bountyId,
+                _bountyIdToBounty
+            );
+        }
+        emit Events.BountyCreated(
+            bountyId,
+            issuer,
+            address(0),
             vars.claimModule,
-            vars.claimModuleInitData,
-            bountyId,
-            _bountyIdToBounty
-        );
-        bytes memory issueModuleReturnData = _initBountyReviewModule(
+            address(0),
             vars.reviewModule,
-            vars.reviewModuleInitData,
-            bountyId,
-            _bountyIdToBounty
+            vars.contentUri
         );
     }
 
@@ -58,17 +73,15 @@ library PublishingLogic {
     ) external returns (uint256) {
         uint256 tokenId;
         address claimModule = _bountyIdToBounty[bountyId].claimModule;
-        // Avoids stack too deep
-        {
-            address claimNFT = _bountyIdToBounty[bountyId].claimNFT;
-            if (claimNFT == address(0)) {
-                claimNFT = address(new ClaimNFT(hub));
-                _bountyIdToBounty[bountyId].claimNFT = claimNFT;
-            }
-            tokenId = IClaimNFT(claimNFT).mint(claimee);
+        address claimNFT = _bountyIdToBounty[bountyId].claimNFT;
+        if (claimNFT == address(0)) {
+            claimNFT = address(new ClaimNFT(hub));
+            _bountyIdToBounty[bountyId].claimNFT = claimNFT;
         }
-        IClaimModule(claimModule).processClaim(bountyId, claimee, bytes(""));
+        tokenId = IClaimNFT(claimNFT).mint(claimee);
 
+        IClaimModule(claimModule).processClaim(bountyId, claimee, bytes(""));
+        emit Events.BountyClaimed(bountyId, claimee, claimNFT, tokenId);
         return tokenId;
     }
 
