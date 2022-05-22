@@ -59,6 +59,20 @@ const config: HardhatUserConfig = {
         mnemonic: "secret",
       },
     },
+    metis: {
+      url: "https://andromeda.metis.io/?owner=1088",
+      chainId: 1088,
+      accounts: {
+        mnemonic: "secret",
+      },
+    },
+    boba: {
+      url: "https://mainnet.boba.network",
+      chainId: 288,
+      accounts: {
+        mnemonic: "secret",
+      },
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

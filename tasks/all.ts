@@ -18,16 +18,12 @@ task("createBounty", "creates a bounty").setAction(async ({}, hre) => {
   const inputStruct = {
     claimModule: addrs.claimModule,
     claimModuleInitData: ethers.utils.defaultAbiCoder.encode(
-      ["address"],
-      [whitelistedClaimee.address]
-    ),
-    reviewModule: ZERO_ADDRESS,
-    reviewModuleInitData: ethers.utils.defaultAbiCoder.encode(
-      ["address"],
-      [""]
+      ["address[]"],
+      [[whitelistedClaimee.address]]
     ),
     contentUri: "popo",
   };
+  console.log(inputStruct);
   const bounty = await hub.connect(issuer).createBounty(inputStruct);
   await bounty.wait();
 

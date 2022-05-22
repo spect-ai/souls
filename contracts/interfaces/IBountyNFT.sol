@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-interface IClaimNFT {
+interface IBountyNFT {
     function initialize(
         uint256 bountyId,
         string calldata name,

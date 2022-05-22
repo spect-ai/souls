@@ -8,7 +8,7 @@ error AlreadyInitialized();
 error TokenDoesNotExist();
 error InitParamsInvalid();
 
-contract ClaimNFT is SoulBoundNFT {
+contract BountyNFT is SoulBoundNFT {
     uint256 internal _bountyId;
 
     // We create the CollectNFT with the pre-computed HUB address before deploying the hub proxy in order

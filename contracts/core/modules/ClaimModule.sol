@@ -13,8 +13,19 @@ contract ClaimModule {
         external
         returns (bytes memory)
     {
-        address whitelistedAddress = abi.decode(data, (address));
-        whitelist[bountyId][whitelistedAddress] = true;
+        if (data.length > 0) {
+            address[] memory whitelistedAddresses = abi.decode(
+                data,
+                (address[])
+            );
+            for (uint256 i = 0; i < whitelistedAddresses.length; ) {
+                whitelist[bountyId][whitelistedAddresses[i]] = true;
+                unchecked {
+                    ++i;
+                }
+            }
+        }
+        return data;
     }
 
     function processClaim(

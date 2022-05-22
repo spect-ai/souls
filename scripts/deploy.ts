@@ -2,14 +2,13 @@ import { ethers } from "hardhat";
 import fs from "fs";
 
 async function main() {
-  const PublishingLogic = await ethers.getContractFactory("PublishingLogic");
-  const publishingLogic = await PublishingLogic.deploy();
+  const BountyLogic = await ethers.getContractFactory("BountyLogic");
+  const logic = await BountyLogic.deploy();
 
-  await publishingLogic.deployed();
+  await logic.deployed();
 
   const hubLibs = {
-    "contracts/libraries/PublishingLogic.sol:PublishingLogic":
-      publishingLogic.address,
+    "contracts/libraries/BountyLogic.sol:BountyLogic": logic.address,
   };
 
   const CredsHub = await ethers.getContractFactory("CredsHub", {
@@ -24,15 +23,10 @@ async function main() {
 
   await claimModule.deployed();
 
-  // const ReviewModule = await ethers.getContractFactory("ReviewModule");
-  // const reviewModule = await ReviewModule.deploy();
-
-  // await reviewModule.deployed();
-
   const addrs = {
     credHub: credsHub.address,
     claimModule: claimModule.address,
-    publishingLogic: publishingLogic.address,
+    publishingLogic: logic.address,
   };
   const json = JSON.stringify(addrs, null, 2);
   console.log(json);

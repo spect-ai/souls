@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "./CredsStorage.sol";
 import {DataTypes} from "../libraries/DataTypes.sol";
-import {PublishingLogic} from "../libraries/PublishingLogic.sol";
+import {BountyLogic} from "../libraries/BountyLogic.sol";
 import {ICredsHub} from "../interfaces/ICredsHub.sol";
 
 contract CredsHub is CredsStorage, ICredsHub {
@@ -17,7 +17,7 @@ contract CredsHub is CredsStorage, ICredsHub {
         console.log("creating bounty", vars.contentUri);
         unchecked {
             uint256 bountyId = ++bountyCounter;
-            PublishingLogic.createBounty(
+            BountyLogic.createBounty(
                 msg.sender,
                 vars,
                 bountyId,
@@ -29,7 +29,7 @@ contract CredsHub is CredsStorage, ICredsHub {
 
     function claimBounty(uint256 bountyId) public returns (uint256) {
         unchecked {
-            PublishingLogic.claim(
+            BountyLogic.claim(
                 bountyId,
                 msg.sender,
                 address(this),
@@ -65,31 +65,13 @@ contract CredsHub is CredsStorage, ICredsHub {
         return _bountyIdToBounty[bountyId].claimModule;
     }
 
-    function getClaimNFT(uint256 bountyId)
+    function getBountyNFT(uint256 bountyId)
         public
         view
         override
         returns (address)
     {
-        return _bountyIdToBounty[bountyId].claimNFT;
-    }
-
-    function getReviewModule(uint256 bountyId)
-        public
-        view
-        override
-        returns (address)
-    {
-        return _bountyIdToBounty[bountyId].reviewModule;
-    }
-
-    function getReviewNFT(uint256 bountyId)
-        public
-        view
-        override
-        returns (address)
-    {
-        return _bountyIdToBounty[bountyId].reviewNFT;
+        return _bountyIdToBounty[bountyId].bountyNFT;
     }
 
     function getBounty(uint256 bountyId)

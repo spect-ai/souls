@@ -7,10 +7,8 @@ library Events {
     event BountyCreated(
         uint256 bountyId,
         address issuer,
-        address claimNFT,
+        address BountyNFT,
         address claimModule,
-        address reviewNFT,
-        address reviewModule,
         string contentUri
     );
 
